@@ -12,7 +12,7 @@ public:
 	SudokuCell at(size_t i, size_t j) const;
 	Solver* solver() const;
 
-	friend std::ostream& operator<<(std::ostream& os, const SudokuPuzzle& cm);
+	friend std::ostream& operator<<(std::ostream& os, const SudokuPuzzle& sp);
 
 private:
 	Solver* m_solver;

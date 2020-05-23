@@ -1,6 +1,7 @@
 #include <assert.h>
 #include "Solver.h"
 #include "SudokuPuzzle.h"
+#include "KnightsTourPuzzle.h"
 
 int main(int argc, char** argv) {
 	(void)argc;
@@ -8,6 +9,7 @@ int main(int argc, char** argv) {
 
 	Solver solver;
 	SudokuPuzzle puzzle(&solver);
+	KnightsTourPuzzle ktpuzzle(&solver);
 
 	puzzle.at(0,3).assume(8);
 	puzzle.at(0,5).assume(1);
@@ -32,10 +34,11 @@ int main(int argc, char** argv) {
 	CMSat::lbool ret = solver.solve();
 	assert(ret == CMSat::l_True);
 	std::cout << puzzle << std::endl;
+	std::cout << ktpuzzle << std::endl;
 	solver.exclude_solution();
 	ret = solver.solve();
 	assert(ret == CMSat::l_True);
-	std::cout << puzzle << std::endl;
+	std::cout << ktpuzzle << std::endl;
 
 	return 0;
 }
