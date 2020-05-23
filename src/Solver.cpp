@@ -56,3 +56,12 @@ const std::vector<CMSat::lbool>& Solver::get_model() const
 {
 	return m_sat_solver.get_model();
 }
+
+void Solver::exclude_solution() {
+	VariableList vars;
+	auto model = get_model();
+	for (unsigned i = 0; i < var_count(); i++) {
+		vars.push_back(Variable(i, model[i] == CMSat::l_True));
+	}
+	add_clause(vars);
+}

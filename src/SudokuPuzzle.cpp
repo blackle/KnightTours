@@ -54,6 +54,6 @@ void SudokuPuzzle::constrain_cells(const std::vector<SudokuCell>& cells)
 		for (auto cell = cells.begin(); cell != cells.end(); cell++) {
 			items.push_back(cell->at(i));
 		}
-		OneHotConstraint::naive(m_solver, items); 
+		OneHotConstraint::commander(m_solver, items, 3); 
 	}
 }

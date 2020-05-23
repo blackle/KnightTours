@@ -31,6 +31,7 @@ void OneHotConstraint::commander(Solver* solver, const VariableList& vars, size_
 		at_most_one(solver, vars);
 		return;
 	}
+	assert(vars.size() % group_size == 0);
 
 	VariableList treevars;
 	for (size_t i = 0; i < vars.size()/group_size; i++) {

@@ -8,7 +8,7 @@ SudokuCell::SudokuCell(Solver* s)
 	: m_solver(s)
 	, m_vars(s->new_vars(length()))
 {
-	OneHotConstraint::naive(m_solver, all()); //todo: is this the most efficient encoding
+	OneHotConstraint::commander(m_solver, all(), 3); //todo: is this the most efficient encoding
 }
 
 Variable SudokuCell::at(size_t i) const
@@ -26,7 +26,7 @@ uint8_t SudokuCell::to_int() const
 	auto model = m_solver->get_model();
 	for (size_t i = 0; i < length(); i++) {
 		if (model[m_vars[i].var()] == CMSat::l_True) {
-			return i;
+			return i + 1;
 		}
 	}
 	return -1;
@@ -34,6 +34,7 @@ uint8_t SudokuCell::to_int() const
 
 void SudokuCell::assume(uint8_t val) const
 {
+	val--;
 	for (size_t i = 0; i < length(); i++) {
 		m_solver->assume(at(i) ^ (i != val));
 	}
@@ -46,6 +47,6 @@ Solver* SudokuCell::solver() const
 
 std::ostream& operator<<(std::ostream& os, const SudokuCell& cell)
 {
-	os << (int)cell.to_int() + 1;
+	os << std::setw(2) << (int)cell.to_int();
 	return os;
 }

@@ -17,6 +17,7 @@ public:
 
 	CMSat::lbool solve();
 	const std::vector<CMSat::lbool>& get_model() const;
+	void exclude_solution();
 private:
 	CMSat::SATSolver m_sat_solver;
 	VariableList m_assumptions;
