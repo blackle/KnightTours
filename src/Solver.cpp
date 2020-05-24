@@ -3,7 +3,7 @@
 Solver::Solver()
 	: m_clause_count(0)
 {
-	m_sat_solver.set_num_threads(4);
+	m_sat_solver.set_num_threads(10);
 }
 
 Variable Solver::new_var()

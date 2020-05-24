@@ -1,6 +1,5 @@
 #pragma once
 #include "SudokuCell.h"
-#include <optional>
 #include <iostream>
 
 class Solver;
@@ -10,7 +9,6 @@ public:
 	explicit SudokuPuzzle(Solver* s);
 
 	SudokuCell at(size_t i, size_t j) const;
-	Solver* solver() const;
 
 	friend std::ostream& operator<<(std::ostream& os, const SudokuPuzzle& sp);
 

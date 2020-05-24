@@ -23,9 +23,11 @@ SudokuPuzzle::SudokuPuzzle(Solver* s)
 			size_t box_y = (i / 3)*3 + (j / 3);
 			box.push_back(at(box_x,box_y));
 		}
-		constrain_cells(column);
-		constrain_cells(row);
-		constrain_cells(box);
+		if (i % 2 == 0) {
+			constrain_cells(column);
+			constrain_cells(row);
+		}
+		// constrain_cells(box);
 	}
 }
 

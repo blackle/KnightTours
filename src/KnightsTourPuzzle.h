@@ -1,6 +1,5 @@
 #pragma once
 #include "ChessCell.h"
-#include <optional>
 #include <iostream>
 
 class Solver;
@@ -10,7 +9,6 @@ public:
 	explicit KnightsTourPuzzle(Solver* s);
 
 	ChessCell at(size_t i, size_t j) const;
-	Solver* solver() const;
 
 	friend std::ostream& operator<<(std::ostream& os, const KnightsTourPuzzle& kt);
 
