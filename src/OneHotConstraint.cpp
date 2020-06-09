@@ -31,16 +31,21 @@ void OneHotConstraint::commander(Solver* solver, const VariableList& vars, size_
 		at_most_one(solver, vars);
 		return;
 	}
-	assert(vars.size() % group_size == 0);
+	// assert(vars.size() % group_size == 0);
 
 	VariableList treevars;
+	int groups = 0;
 	for (size_t i = 0; i < vars.size()/group_size; i++) {
+		groups++;
 		int idx = group_size*i;
 		VariableList group(&vars[idx], &vars[idx]+group_size);
 		at_most_one(solver, group);
 
 		auto treevar = commander_variable(solver, group);
 		treevars.push_back(treevar);
+	}
+	for (size_t i = group_size*groups; i < vars.size(); i++) {
+		treevars.push_back(vars[i]);
 	}
 
 	commander(solver, treevars, group_size);

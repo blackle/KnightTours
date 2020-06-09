@@ -1,25 +1,27 @@
 #include "KnightsTourPuzzle.h"
 #include "OneHotConstraint.h"
 
-KnightsTourPuzzle::KnightsTourPuzzle(Solver* s)
-	: m_solver(s)
+KnightsTourPuzzle::KnightsTourPuzzle(int width, int height, Solver* s)
+	: m_width(width)
+	, m_height(height)
+	, m_solver(s)
 {
-	for (size_t i = 0; i < ChessCell::length(); i++) {
-		ChessCell cell(m_solver);
+	for (int i = 0; i < m_width*m_height; i++) {
+		NumberedCell cell(m_width*m_height, m_solver);
 		m_cells.push_back(cell);
 	}
 	//each cell unique
-	for (size_t i = 0; i < ChessCell::length(); i++) {
+	for (int i = 0; i < m_width*m_height; i++) {
 		VariableList items;
 		for (auto cell = m_cells.begin(); cell != m_cells.end(); cell++) {
 			items.push_back(cell->at(i));
 		}
-		OneHotConstraint::commander(m_solver, items, 3); 
+		OneHotConstraint::commander(m_solver, items, 2); 
 	}
 	//knights tour jump constraint
-	for (size_t i = 0; i < 9; i++) {
-		for (size_t j = 0; j < 9; j++) {
-			for (size_t t = 0; t < ChessCell::length(); t++) {
+	for (int i = 0; i < m_width; i++) {
+		for (int j = 0; j < m_height; j++) {
+			for (int t = 0; t < m_width*m_height-4; t++) {
 				constrain_knight_movement(i,j,t,t+1);
 				constrain_knight_movement(i,j,t,t-1);
 			}
@@ -27,14 +29,24 @@ KnightsTourPuzzle::KnightsTourPuzzle(Solver* s)
 	}
 }
 
-ChessCell KnightsTourPuzzle::at(size_t i, size_t j) const {
-	return m_cells.at(i*9 + j);
+int KnightsTourPuzzle::width() const
+{
+	return m_width;
+}
+
+int KnightsTourPuzzle::height() const
+{
+	return m_height;
+}
+
+NumberedCell KnightsTourPuzzle::at(int i, int j) const {
+	return m_cells.at(i + j*m_width);
 }
 
 std::ostream& operator<<(std::ostream& os, const KnightsTourPuzzle& kt)
 {
-	for (size_t i = 0; i < 9; i++) {
-		for (size_t j = 0; j < 9; j++) {
+	for (int j = 0; j < kt.height(); j++) {
+		for (int i = 0; i < kt.width(); i++) {
 			os << " " << kt.at(i, j);
 		}
 		os << std::endl;
@@ -43,7 +55,8 @@ std::ostream& operator<<(std::ostream& os, const KnightsTourPuzzle& kt)
 }
 
 void KnightsTourPuzzle::constrain_knight_movement(int i, int j, int t, int tnew) {
-	if (tnew == (int)ChessCell::length() || tnew < 0) return;
+	// tnew = (tnew+m_width*m_height)%(m_width*m_height); //uncomment for closed tour
+	if (tnew == m_width*m_height || tnew < 0) return;
 	VariableList clause;
 	for (int b = 0; b < 8; b++) {
 		int xsgn = (b & 1) == 0 ? -1 : 1;
@@ -52,8 +65,8 @@ void KnightsTourPuzzle::constrain_knight_movement(int i, int j, int t, int tnew)
 		int ystp = (b & 4) == 0 ? 2 : 1;
 		int x = i + xstp*xsgn;
 		int y = j + ystp*ysgn;
-		if (x < 0 || x >= 9) continue;
-		if (y < 0 || y >= 9) continue;
+		if (x < 0 || x >= m_width) continue;
+		if (y < 0 || y >= m_height) continue;
 		clause.push_back(at(x,y).at(tnew));
 	}
 	clause.push_back(~at(i,j).at(t));

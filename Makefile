@@ -1,6 +1,6 @@
 HEADERS := $(wildcard src/*.h)
 SOURCES := $(wildcard src/*.cpp)
-PROJECT := sudoku
+PROJECT := knights_tour
 
 all : $(PROJECT) $(TEST_PROJECT)
 
